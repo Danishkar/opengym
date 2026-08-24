@@ -9,9 +9,17 @@
 //
 // Like the demo build, MOBILE is replaced at build time, so all of this folds away in
 // web bundles; the Capacitor plugins are only ever imported behind it.
-import { t } from './i18n-core.js'
-
-export const MOBILE = import.meta.env.VITE_MOBILE === '1'
+const getEnv = () => {
+  try {
+    if (typeof process !== 'undefined' && process.env) return process.env
+  } catch {}
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) return import.meta.env
+  } catch {}
+  return {}
+}
+const env = getEnv()
+export const MOBILE = env.VITE_MOBILE === '1' || env.NEXT_PUBLIC_MOBILE === '1'
 
 const FILE = 'opengym-state.json'
 

@@ -8,9 +8,12 @@ export const DATA = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 export function getEnvConfig(req) {
   const host = req?.headers?.get?.('host') || 'localhost:3000';
   const proto = req?.headers?.get?.('x-forwarded-proto') || 'http';
-  const defaultOrigin = `${proto}://${host}`;
-  const origin = process.env.ORIGIN || defaultOrigin;
-  const rpId = process.env.RP_ID || host.split(':')[0] || 'localhost';
+  const reqOrigin = `${proto}://${host}`;
+  const envOrigin = process.env.ORIGIN;
+  const origins = Array.from(new Set([envOrigin, reqOrigin].filter(Boolean)));
+  const origin = origins.length === 1 ? origins[0] : origins;
+  const hostDomain = host.split(':')[0] || 'localhost';
+  const rpId = process.env.RP_ID || hostDomain;
   const rpName = process.env.RP_NAME || 'openGym';
   return { origin, rpId, rpName };
 }

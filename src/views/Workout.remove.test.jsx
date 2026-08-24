@@ -108,7 +108,31 @@ describe('remove-exercise locale coverage', () => {
     'Remove',
     'Which exercise in this superset do you want to remove?'
   ]
-  const packs = import.meta.glob('../locales/*.js', { eager: true, import: 'default' })
+import de from '../locales/de.js'
+import es from '../locales/es.js'
+import fr from '../locales/fr.js'
+import hi from '../locales/hi.js'
+import it from '../locales/it.js'
+import ko from '../locales/ko.js'
+import pl from '../locales/pl.js'
+import pt from '../locales/pt.js'
+import ru from '../locales/ru.js'
+import tr from '../locales/tr.js'
+import zh from '../locales/zh.js'
+
+const packs = {
+  '../locales/de.js': de,
+  '../locales/es.js': es,
+  '../locales/fr.js': fr,
+  '../locales/hi.js': hi,
+  '../locales/it.js': it,
+  '../locales/ko.js': ko,
+  '../locales/pl.js': pl,
+  '../locales/pt.js': pt,
+  '../locales/ru.js': ru,
+  '../locales/tr.js': tr,
+  '../locales/zh.js': zh
+}
 
   it('defines every new prompt in all eleven locale packs', () => {
     expect(Object.keys(packs)).toHaveLength(11)

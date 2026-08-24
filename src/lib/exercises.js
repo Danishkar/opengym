@@ -55,9 +55,18 @@ export const allExercises = st => [...(st.customEx || []), ...EXDB]
 // every request went to /plan/r/img/… and 404'd — and nginx's extension block has no
 // try_files, so it 404s rather than falling through to index.html, leaving a blank image
 // and nothing in the console.
-const ENV = import.meta.env || {}
-const IMG_BASE = ENV.VITE_IMG_BASE || '/img/'
-const GIF_BASE = ENV.VITE_GIF_BASE || '/gif/'
+const getEnv = () => {
+  try {
+    if (typeof process !== 'undefined' && process.env) return process.env
+  } catch {}
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) return import.meta.env
+  } catch {}
+  return {}
+}
+const ENV = getEnv()
+const IMG_BASE = ENV.VITE_IMG_BASE || ENV.NEXT_PUBLIC_IMG_BASE || '/img/'
+const GIF_BASE = ENV.VITE_GIF_BASE || ENV.NEXT_PUBLIC_GIF_BASE || '/gif/'
 export const imgSrc = ex => IMG_BASE + ex.img
 export const gifSrc = ex => GIF_BASE + ex.gif
 
