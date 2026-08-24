@@ -24,16 +24,26 @@ export const ALLOW_GUEST = !/^(0|false|no|off)$/i.test(process.env.ALLOW_GUEST |
 export const SESSION_DAYS = Math.max(1, +(process.env.SESSION_DAYS || 90) || 90);
 export const MAX_BODY = 5 * 1024 * 1024;
 
-if (!fs.existsSync(DATA)) {
-  fs.mkdirSync(DATA, { recursive: true });
+try {
+  if (!fs.existsSync(DATA)) {
+    fs.mkdirSync(DATA, { recursive: true });
+  }
+} catch (e) {
+  console.error('Warning: Unable to create DATA directory:', DATA, e.message);
 }
 
 /* ---------- secret + db ---------- */
 const secretFile = path.join(DATA, 'secret');
-if (!fs.existsSync(secretFile)) {
-  fs.writeFileSync(secretFile, crypto.randomBytes(32).toString('hex'), { mode: 0o600 });
+let SECRET = 'fallback-opengym-secret-key';
+try {
+  if (!fs.existsSync(secretFile)) {
+    fs.writeFileSync(secretFile, crypto.randomBytes(32).toString('hex'), { mode: 0o600 });
+  }
+  SECRET = fs.readFileSync(secretFile, 'utf8').trim();
+} catch (e) {
+  console.error('Warning: Unable to read/write secretFile:', e.message);
 }
-export const SECRET = fs.readFileSync(secretFile, 'utf8').trim();
+export { SECRET };
 
 const dbFile = path.join(DATA, 'db.json');
 export let db = { users: [], creds: [], subs: [], invites: [] };
